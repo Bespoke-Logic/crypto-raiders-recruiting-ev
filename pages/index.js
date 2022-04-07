@@ -108,7 +108,14 @@ export default function Home() {
         <p>
           Recruiting Cost in Aurum: {recruitCost}
           <br />
-          Recruiting Cost in Fiat: {PRETTY_CURRENCY.format(fiatCost)}
+          Recruiting Cost in Fiat{" "}
+          <input
+            type="text"
+            size="7"
+            value={aurumValue}
+            onChange={(e) => setAurumValue(e.target.value)}
+          />{" "}
+          $/aurum ): {PRETTY_CURRENCY.format(fiatCost)}
         </p>
         <p>
           OpenSea Common floor (
