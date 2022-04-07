@@ -4,9 +4,11 @@ import styles from "../styles/Home.module.css";
 import { useState } from "react";
 
 export default function Home() {
+  const openSeaFee = 0.075;
   const [sourceRarity, setSourceRarity] = useState("common");
   const [sourceGen, setSourceGen] = useState(1);
   const [targetGen, setTargetGen] = useState(6);
+  const [showFee, setShowFee] = useState(true);
 
   // Gen 1,2,3,4,5 -> [gen6, 7, 8, 9, 10]
   const recruitingCosts = [
@@ -36,18 +38,21 @@ export default function Home() {
   const fiatCost = recruitCost * aurumValue;
   const rarities = recruitingOdds[sourceRarity];
   const commonOdds = recruitingOdds[sourceRarity][0];
-  const commonProfit = commonFloor * ethValue - fiatCost;
+  const commonProfit = showFee
+    ? (commonFloor * ethValue - fiatCost) * (1 - openSeaFee)
+    : commonFloor * ethValue - fiatCost;
+  const commonPostFee = commonProfit - commonProfit * 0.075;
   const commonExpectedValue = commonOdds * commonProfit;
-  console.log("common", commonProfit, commonOdds, commonExpectedValue);
   const uncommonOdds = recruitingOdds[sourceRarity][1];
-  const uncommonProfit = uncommonFloor * ethValue - fiatCost;
+  const uncommonProfit = showFee
+    ? (uncommonFloor * ethValue - fiatCost) * (1 - openSeaFee)
+    : uncommonFloor * ethValue - fiatCost;
   const uncommonExpectedValue = uncommonOdds * uncommonProfit;
-  console.log("uncommon", uncommonProfit, uncommonOdds, uncommonExpectedValue);
   const rareOdds = recruitingOdds[sourceRarity][2];
-  const rareProfit = rareFloor * ethValue - fiatCost;
+  const rareProfit = showFee
+    ? (rareFloor * ethValue - fiatCost) * (1 - openSeaFee)
+    : rareFloor * ethValue - fiatCost;
   const rareExpectedValue = rareOdds * rareProfit;
-  console.log("rare", rareProfit, rareOdds, rareExpectedValue);
-  console.log(commonExpectedValue + uncommonExpectedValue + rareExpectedValue);
 
   const PRETTY_PERCENT = Intl.NumberFormat("en-US", {
     style: "percent",
@@ -104,11 +109,18 @@ export default function Home() {
             <option value="9">9</option>
             <option value="10">10</option>
           </select>
+          <br />
+          Subtract OpenSea Fee ({PRETTY_PERCENT.format(openSeaFee)}):{" "}
+          <input
+            type="checkbox"
+            checked={showFee}
+            onChange={(e) => setShowFee(e.target.checked)}
+          />
         </p>
         <p>
           Recruiting Cost in Aurum: {recruitCost}
           <br />
-          Recruiting Cost in Fiat{" "}
+          Recruiting Cost in Fiat (
           <input
             type="text"
             size="7"
