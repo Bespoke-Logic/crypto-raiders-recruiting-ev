@@ -39,18 +39,20 @@ export default function Home() {
   const rarities = recruitingOdds[sourceRarity];
   const commonOdds = recruitingOdds[sourceRarity][0];
   const commonProfit = showFee
-    ? (commonFloor * ethValue - fiatCost) * (1 - openSeaFee)
+    ? commonFloor * ethValue - fiatCost - commonFloor * ethValue * openSeaFee
     : commonFloor * ethValue - fiatCost;
   const commonPostFee = commonProfit - commonProfit * 0.075;
   const commonExpectedValue = commonOdds * commonProfit;
   const uncommonOdds = recruitingOdds[sourceRarity][1];
   const uncommonProfit = showFee
-    ? (uncommonFloor * ethValue - fiatCost) * (1 - openSeaFee)
+    ? uncommonFloor * ethValue -
+      fiatCost -
+      uncommonFloor * ethValue * openSeaFee
     : uncommonFloor * ethValue - fiatCost;
   const uncommonExpectedValue = uncommonOdds * uncommonProfit;
   const rareOdds = recruitingOdds[sourceRarity][2];
   const rareProfit = showFee
-    ? (rareFloor * ethValue - fiatCost) * (1 - openSeaFee)
+    ? rareFloor * ethValue - fiatCost - rareFloor * ethValue * openSeaFee
     : rareFloor * ethValue - fiatCost;
   const rareExpectedValue = rareOdds * rareProfit;
 
